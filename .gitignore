@@ -3,5 +3,5 @@ logs/*
 node_modules/
 tmp
 .DS_Store
-app/credentials.js
+credentials.js
 app/main_test.js
