@@ -1,11 +1,11 @@
 var express = require('express'),
-	connect = require('connect'),
-  	app = express(),
-  	MongoClient = require('mongodb').MongoClient,
-  	MONGO_PASSWORD = process.env.MONGO_PASSWORD || require('./credentials').MONGO_PASSWORD, 
-  	connection_string = 'mongodb://is429_user:' + MONGO_PASSWORD + '@ds039088.mongolab.com:39088/mitb_todos';
-
-app.set('port', process.env.PORT);
+    connect = require('connect'),
+    app = express(),
+    MongoClient = require('mongodb').MongoClient,
+    MONGO_PASSWORD = process.env.MONGO_PASSWORD || require('./credentials').MONGO_PASSWORD, 
+    connection_string = 'mongodb://is429_user:' + MONGO_PASSWORD + '@ds039088.mongolab.com:39088/mitb_todos';
+ 
+app.set('port', process.env.PORT || 3000);
 app.use(connect.compress());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -125,7 +125,7 @@ app.delete('/todos/:id', function(req, res) {
 });
 
 
-app.listen(process.env.PORT, function() {
-	console.log('Express server listening on port ' + app.get('port'));
+app.listen(process.env.PORT||3000, function() {
+    console.log('Express server listening on port ' + app.get('port'));
 });
 module.exports = app;
