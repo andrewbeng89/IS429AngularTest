@@ -2,7 +2,7 @@ var express = require('express'),
 	connect = require('connect'),
   	app = express(),
   	MongoClient = require('mongodb').MongoClient,
-  	MONGO_PASSWORD = process.env.MONGO_PASSWORD, 
+  	MONGO_PASSWORD = process.env.MONGO_PASSWORD || 'test', 
   	connection_string = 'mongodb://is429_user:' + MONGO_PASSWORD + '@ds039088.mongolab.com:39088/mitb_todos';
 
 console.log(MONGO_PASSWORD);
