@@ -4,6 +4,8 @@ var express = require('express'),
   	MongoClient = require('mongodb').MongoClient,
   	MONGO_PASSWORD = process.env.MONGO_PASSWORD, 
   	connection_string = 'mongodb://is429_user:' + MONGO_PASSWORD + '@ds039088.mongolab.com:39088/mitb_todos';
+
+console.log(MONGO_PASSWORD);
  
 app.set('port', process.env.PORT);
 app.use(connect.compress());
