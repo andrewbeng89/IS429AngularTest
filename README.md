@@ -129,7 +129,7 @@ Create and configure new CloudBees hosted node.js application
 
 To test the CI testing and deployment:
 
-1. `cd ~/<your-repo>`
+1. `cd ~/IS429AngularTest`
 2. Make some changes to app/index.html using the Nitrous.IO IDE
 3. Commit the changes `git commit -m "test changes to app/index.html"`
 4. Push the changes to GitHub `git push origin master`
@@ -144,30 +144,29 @@ This section will cover simple front and back end techniques to get you up to sp
 
 [AngularJS](http://angularjs.org) provides a modularized approach to bind data structures, e.g. Arrays, Objects and other variables, to HTML views. This repository provides the code for a simple "todo list" application created in AngularJS.
 
-There are three versions of this "todo" application:
+AngularJS also provides an easy way to implment [single page applications](http://en.wikipedia.org/wiki/Single-page_application) with front end templating and routing. In this example application, routing to the various templates are in app/js/app.js while the HTML fragments are stored in the app/partials directory. Each template can then be associated to a unique AngularJS controller (app/js/controllers.js).
 
-1. A purely front-end AngularJS app that DOES NOT communicate with any back-end database that will be pushed to GitHub Pages (index.html located [here](https://github.com/andrewbeng89/mitb_node_demo/blob/master/index.html))
-3. A purelt front-end AngularJS app that COMMUNICATES with a [Firebase](https://firebase.com) real-time Database-as-a-Service
-2. Integrated AngularJS app that communites with a Node.js backe-end hosted on Heroku and Elastic Beanstalk (index.html located [here](https://github.com/andrewbeng89/mitb_node_demo/blob/master/public/index.html))
+This repository also a classic "todo" application with two backend approaches:
 
-The "/public/js/todo.js" script, together with the "index.html" file located at the root of this repository is all that is required to get an AngularJS "todo list" application up and running. This purely front-end application is pushed to and viewable on GH-Pages branch of this repository. The list of "todos" is reinitialized to an empty list after the page has been refreshed. In order to create an application that will persist the list "todos", please refer to the steps below.
+1. A purely front-end AngularJS app that COMMUNICATES with a [Firebase](https://firebase.com) real-time Database-as-a-Service
+2. Integrated AngularJS app that communites with a Node.js back-end hosted on CloudBees
 
 
 ### AngularJS + Firebase + AngularFire
 
-[Firebase](https://firebase.com) provides a real-time document (JSON) database. [AngularFire](http://angularfire.com/) is a JavaScript library that allows developers to bind AngularJS scope objects with real-time data from Firebase. CRUD operations will be persisted and executed on the client-side without any need for any backend operations. 
+[Firebase](https://firebase.com) provides a real-time Object (JSON) database. [AngularFire](http://angularfire.com/) is a JavaScript library that allows developers to bind AngularJS scope objects with real-time data from Firebase. CRUD operations will be persisted and executed on the client-side without any need for any backend operations. 
 
-Take a look at "indext.html" at the root of this repository and "/public/js/todo_fire.js" to see the modifications from "todo.js". 
+Take a look at app/partials/todos.html and the "TodoFireController" in app/js/controllers.js. 
 
 To create your own Firebase real-time database: 
 
 1. Sign up for Firebase with your GitHub account
 2. Create a new developer plan Firebase, and note the URL of the Firebase
-3. Change this line in "todo_fire.js": `var ref = new Firebase('https://<your-firebase-name>.firebaseio.com/todos');`
-4. Push an update that will publish the the static "index.html" to GH-Pages
-5. View the app on your GH-Pages URL
+3. Change this line in app/js/controllers.js: `var ref = new Firebase('https://<your-firebase-name>.firebaseio.com/todos');`
+4. Push an update GitHub
+5. View the app on your CloudBees app URL one the build is completed
 6. Create some new todos and reload the page and observe
-
+7. Open up different windows to the same URL and observe when you perform CRUD on the todos
 
 ### Node.js with MongoDB (Mongolab Database-as-a-Service)
 
@@ -187,12 +186,10 @@ To uses MongoDB-as-a-Service hosted on [Mongolab](https://mongolab.com) with the
 
 To make use of the MongoDB database you have just created in the Node.js web application these credentials have to be used in a secure manner:
 
-1. For developemnt on Koding.com, a new file at the root level of this repository called credentials.js will be used
-2. Using the Heroku toolbelt, the MongoDB password will be set as Heroku environment variable
-3. Using the Elastic Beanstalk console, the MongoDB password will be set as Heroku environment variable
-4. Using the travis gem CLI, the MongoDB password will be encrypted and used during the build process
+1. For developemnt on Nitrous.IO, app/credentials.js will be used
+2. Using the CloudBees SDK, the MongoDB password will be set as CloudBees config variable
 
-To use the password in the development environment, create a new file called "credentials.js" in the root directory of application repository. Edit the contents of "credentials.js" accordingly:
+To use the password in the development environment, edit the contents of "credentials.js" (created in Part 1) accordingly:
 
 <pre>
   <code>
@@ -202,22 +199,10 @@ module.exports = {
   </code>
 </pre>
 
-Using Heroku toolbelt from the VM terminal:
+Using CloudBees SDK from the VM terminal:
 
-1. `heroku config:set MONGO_PASSWORD=<MongoDB Password from Mongolab here>`
-2. Verify that the MONGO_PASSWORD variable has been set: `heroku config`
-
-Using the Elastic Beanstalk Console:
-
-1. From the [console](https://console.aws.amazon.com/elasticbeanstalk/home), navigate to the application's "Configuration" page
-2. Scroll down to "Environment Properties"
-3. At the last table row, Enter "MONGO_PASSWORD" into the "Property Name" column and your password into the "Property Value" column
-4. Save the configuration
-
-Using travis to encrypt:
-
-1. From the VM terminal at the repository's root level: `travis encrypt MONGO_PASSWORD="<MongoDB Password from Mongolab here>" --add`
-2. Check the .travis.yml file to verify that a new secure variable has been added
+1. `bees config:set MONGO_PASSWORD=<MongoDB Password from Mongolab here> -a <your-username>/<your-repo>`
+2. Verify that the MONGO_PASSWORD variable has been set: `bees config:list -a <your-username>/<your-repo>`
 
 
 ### Application Tracking with Google Analytics
