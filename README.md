@@ -128,47 +128,27 @@ Create and configure new CloudBees hosted node.js application
 export DISPLAY=:1
 Xvfb :1 &
 
-#
-# Fetch node and testacular if we don't have it already
-#
-
 node_version=v0.10.16
 install_name=node-$node_version-linux-x64
 node_home=$PWD/$install_name
 
-#if [ ! -e $install_name.tar.gz ]
-#then
-    wget http://nodejs.org/dist/$node_version/$install_name.tar.gz
-    tar xf $install_name.tar.gz
-    $node_home/bin/npm install -g phantomjs
-    $node_home/bin/npm install -g karma
-    $node_home/bin/npm install -g karma-junit-reporter
-    $node_home/bin/npm install -g karma-jasmine
-    $node_home/bin/npm install -g karma-ng-scenario
-    $node_home/bin/npm install -g mocha
-#fi
-
-# 
-# run the Angular.js tests (using a browser on the build server)
-#
+wget http://nodejs.org/dist/$node_version/$install_name.tar.gz
+tar xf $install_name.tar.gz
+$node_home/bin/npm install -g phantomjs
+$node_home/bin/npm install -g karma
+$node_home/bin/npm install -g karma-junit-reporter
+$node_home/bin/npm install -g karma-jasmine
+$node_home/bin/npm install -g karma-ng-scenario
+$node_home/bin/npm install -g mocha
 
 export PATH=$PATH:$node_home/bin
 export PHANTOMJS_BIN=$node_home/bin/phantomjs
 scripts/test.sh  --single-run --browsers="Chrome,Firefox" --reporters="dots,junit" --no-colors
 
-#
-# run the Angular.js e2e tests (this requires a server too)
-#
-
 node scripts/web-server.js > /dev/null &
 NODE_PID=$!
 scripts/e2e-test.sh --single-run --browsers="Chrome,Firefox" --reporters="dots,junit" --no-colors
 kill -s TERM $NODE_PID
-
-
-#
-# package the app for the CloudBees node.js stack (deployer picks it up)
-# 
 
 cd app
 
