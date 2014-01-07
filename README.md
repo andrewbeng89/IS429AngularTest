@@ -47,7 +47,6 @@ Generate a new ssh key pair on the VM to use to sync with GitHub and Jenkins.
 
 ### Clone and Configure Demo App
 
-
 1. Set your git user email identity `git config --global user.email "<your_email@example.com>"`
 2. Set your git user email identity `git config --global user.name "<Your Name>"`
 3. Clone this repository `git clone https://github.com/andrewbeng89/IS429AngularTest.git`
@@ -87,7 +86,8 @@ PATH=$PATH:$BEES_HOME
   </code>
 </pre> 
 
-Check that the SDK has been installed
+
+Check that the SDK has been installed:
 
 1. Reload .bashrc `source ~/.bashrc`
 2. `bees help` and enter region and account credentials
@@ -109,6 +109,7 @@ CloudBees provides [Jenkins](https://wiki.jenkins-ci.org/display/JENKINS/Meet+Je
 10. Check "Active" and click "Test Hook"
 6. Click "Apply" at the bottom of the page.
 
+
 Create and configure new CloudBees hosted node.js application
 
 1. `bees app:create -a <your-app-name> -t nodejs -P MONGO_PASSWORD="is429" -R PLUGIN.SRC.nodejs=https://dl.dropboxusercontent.com/u/6484381/nodejs-clickstack.zip`
@@ -122,61 +123,11 @@ Create and configure new CloudBees hosted node.js application
 9. Click "Add application" and enter the Application ID of the app you just created in the first step
 10. Change "Application file" to `target/*.zip`
 11. Add "Publish JUnit test result report" from "Add post-build action" and fill `test_out/unit.xml,test_out/e2e.xml` in "Test report XMLs"
-12. Add the following shell commands under "Execute shell":
-<pre>
-  <code>
-export DISPLAY=:1
-Xvfb :1 &
+12. Add the contents of `./build_script` to the shell commands under "Execute shell":
+13. Finally... click "Apply" at the bottom of the page!
 
-node_version=v0.10.16
-install_name=node-$node_version-linux-x64
-node_home=$PWD/$install_name
 
-wget http://nodejs.org/dist/$node_version/$install_name.tar.gz
-tar xf $install_name.tar.gz
-$node_home/bin/npm install -g phantomjs
-$node_home/bin/npm install -g karma
-$node_home/bin/npm install -g karma-junit-reporter
-$node_home/bin/npm install -g karma-jasmine
-$node_home/bin/npm install -g karma-ng-scenario
-$node_home/bin/npm install -g mocha
-
-export PATH=$PATH:$node_home/bin
-export PHANTOMJS_BIN=$node_home/bin/phantomjs
-scripts/test.sh  --single-run --browsers="Chrome,Firefox" --reporters="dots,junit" --no-colors
-
-node scripts/web-server.js > /dev/null &
-NODE_PID=$!
-scripts/e2e-test.sh --single-run --browsers="Chrome,Firefox" --reporters="dots,junit" --no-colors
-kill -s TERM $NODE_PID
-
-cd app
-
-if [ ! -d test ]
-  then mkdir test
-fi
-
-cat > "test/test.js" << EOF
-  var app = require('../app'), http = require('http'), request = require('supertest'), assert = require('assert');
-   describe('GET /index.html', function(){
-    it('get index.html', function(done){
-      request(app)
-        .get('/index.html')
-        .expect(200, done);
-    });
-  });
-EOF
-
-npm install
-npm test
-
-mkdir -p ../target
-rm -rf ../target/app.zip
-zip -r ../target/app.zip *
-  </code>
-</pre>
-
-Finally... click "Apply" at the bottom of the page! To test the CI testing and deployment:
+To test the CI testing and deployment:
 
 1. `cd ~/<your-repo>`
 2. Make some changes to app/index.html using the Nitrous.IO IDE
