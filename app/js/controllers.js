@@ -15,15 +15,12 @@ controller('MyCtrl1', [function() {
     $('#navbar').children('.active').removeClass('active');
 	$('#todos').addClass('active');
     
-    // Array representing the list of todos
-    $scope.todos = [];
     // Load status
     $scope.loaded = false;
         
-    var ref = new Firebase('https://mitb-demo.firebaseio.com/todos');
+    var ref = new Firebase('https://is429-demo.firebaseio.com/todos');
     $scope.todos = $firebase(ref);
     $scope.todos.$bind($scope, "todos");
-    console.log($scope.todos["-JCcHIT8w5TYIos6i6II"]);
     
     $scope.addTodo = function(title) {
         // Reset the title to an empty string
@@ -39,23 +36,21 @@ controller('MyCtrl1', [function() {
         
     $scope.changeCompleted = function(todo) {
         // Update the todo
+        $scope.todos.$getIndex().forEach(function(index) {
+            if ($scope.todos[index].id === todo.id) {
+                $scope.todos.$child(index).$set(todo);
+            }
+        });
         var message = (todo.completed === true) ? 'Task Completed!' : 'Task Uncompleted!';
     };
     
     $scope.removeCompletedItems = function() {
-        // Array to contain all uncompleted todos
-        var uncompleted_todos = [];
         // If a todo is completed, delete it
-        $scope.todos.forEach(function(todo) {
-            if (todo.completed === true) {
-                deleteTodo(todo.id);
-            }
-            else {
-                uncompleted_todos.push(todo);
+        $scope.todos.$getIndex().forEach(function(index) {
+            if ($scope.todos[index].completed === true) {
+                $scope.todos.$remove(index);
             }
         });
-        // Set todo list to list of uncompleted todos
-        $scope.todos = uncompleted_todos;
     };
 
     function deleteTodo(id) {
