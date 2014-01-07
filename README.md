@@ -70,7 +70,7 @@ You can use Nitrous.IO as a testing environment for development.
 
 ![koding terminal](https://github.com/andrewbeng89/IS429AngularTest/raw/master/images/webapp_preview.png)
 
-### Install and user the ClouToolbeltdBees SDK
+### Install and use the CloudBees SDK
 
 After signing up for [CloudBees](http://www.cloudbees.com/), install the CloudBees SDK on your Nitrous.IO Box
 
@@ -91,6 +91,118 @@ Check that the SDK has been installed
 
 1. Reload .bashrc `source ~/.bashrc`
 2. `bees help` and enter region and account credentials
+
+### Continuous Integration with CloudBees and GitHub
+
+CloudBees provides [Jenkins](https://wiki.jenkins-ci.org/display/JENKINS/Meet+Jenkins), a framework for building/testing software projects continuously, as a service. Developers can hook their GitHub project to this service, triggering automated test, build and deployment scripts whenever a push is made to the GitHub repository. Follow these steps to use Jenkins-as-a-Service with GitHub and CloudBees:
+
+1. Go to `https://<your-username>.ci.cloudbees.com/pluginManager/available`
+2. Select the GitHub plugin and click "Install without restart"
+3. During the installation process, check "Restart Jenkens when installation is complete..."
+4. Once Jenkins has restarted, go to `https://<your-username>.ci.cloudbees.com/configure` and scroll down to "GitHub Web Hook"
+5. Check "Let Jenkins auto-manage..."
+7. Enter GitHub credentials and test them
+6. Check "Override Hook URL"
+7. Copy the Hook URL
+8. Go to `https://github.com/<your-username>/<your-repository>/settings/hooks`
+9. Select "Jenkins (Github plugin)" and enter the URL
+10. Check "Active" and click "Test Hook"
+6. Click "Apply" at the bottom of the page.
+
+Create and configure new CloudBees hosted node.js application
+
+1. `bees app:create -a <your-app-name> -t nodejs -P MONGO_PASSWORD="is429" -R PLUGIN.SRC.nodejs=https://dl.dropboxusercontent.com/u/6484381/nodejs-clickstack.zip`
+2. Go to `https://<your-username>.ci.cloudbees.com/view/All/newJob` to configure a new Jenkins build job
+3. Check "Build a free-style software project" and click "Ok"
+4. Uncheck "Restrict where this project can be run" under "CloudBees DEV@cloud Authorization" on the next page
+5. Check "Git" under "Source Code Management" and enter `https://github.com/<your-username>/<your-repository>.git` as the "Repository URL"
+6. Check "Build when a change is pushed to GitHub" under "Build Triggers"
+7. Select "Execute shell" from "Add build step" dropdown
+8. Add "Deploy applications" build step
+9. Click "Add application" and enter the Application ID of the app you just created in the first step
+10. Change "Application file" to `target/*.zip`
+11. Add "Publish JUnit test result report" from "Add post-build action" and fill `test_out/unit.xml,test_out/e2e.xml` in "Test report XMLs"
+12. Add the following shell commands under "Execute shell":
+<pre>
+  <code>
+export DISPLAY=:1
+Xvfb :1 &
+
+#
+# Fetch node and testacular if we don't have it already
+#
+
+node_version=v0.10.16
+install_name=node-$node_version-linux-x64
+node_home=$PWD/$install_name
+
+#if [ ! -e $install_name.tar.gz ]
+#then
+    wget http://nodejs.org/dist/$node_version/$install_name.tar.gz
+    tar xf $install_name.tar.gz
+    $node_home/bin/npm install -g phantomjs
+    $node_home/bin/npm install -g karma
+    $node_home/bin/npm install -g karma-junit-reporter
+    $node_home/bin/npm install -g karma-jasmine
+    $node_home/bin/npm install -g karma-ng-scenario
+    $node_home/bin/npm install -g mocha
+#fi
+
+# 
+# run the Angular.js tests (using a browser on the build server)
+#
+
+export PATH=$PATH:$node_home/bin
+export PHANTOMJS_BIN=$node_home/bin/phantomjs
+scripts/test.sh  --single-run --browsers="Chrome,Firefox" --reporters="dots,junit" --no-colors
+
+#
+# run the Angular.js e2e tests (this requires a server too)
+#
+
+node scripts/web-server.js > /dev/null &
+NODE_PID=$!
+scripts/e2e-test.sh --single-run --browsers="Chrome,Firefox" --reporters="dots,junit" --no-colors
+kill -s TERM $NODE_PID
+
+
+#
+# package the app for the CloudBees node.js stack (deployer picks it up)
+# 
+
+cd app
+
+if [ ! -d test ]
+  then mkdir test
+fi
+
+cat > "test/test.js" << EOF
+  var app = require('../app'), http = require('http'), request = require('supertest'), assert = require('assert');
+   describe('GET /index.html', function(){
+    it('get index.html', function(done){
+      request(app)
+        .get('/index.html')
+        .expect(200, done);
+    });
+  });
+EOF
+
+npm install
+npm test
+
+mkdir -p ../target
+rm -rf ../target/app.zip
+zip -r ../target/app.zip *
+  </code>
+</pre>
+
+Finally... click "Apply" at the bottom of the page! To test the CI testing and deployment:
+
+1. `cd ~/<your-repo>`
+2. Make some changes to app/index.html using the Nitrous.IO IDE
+3. Commit the changes `git commit -m "test changes to app/index.html"`
+4. Push the changes to GitHub `git push origin master`
+5. Go to `https://<your-username>.ci.cloudbees.com/job/<your-build-id>/` where the build will start shortly
 
 
 ## Part 2: AngularJS Development in the Cloud
