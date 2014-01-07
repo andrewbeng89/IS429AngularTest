@@ -11,7 +11,7 @@ controller('MyCtrl1', [function() {
 	$('#navbar').children('.active').removeClass('active');
 	$('#view2').addClass('active');
 }])
-.controller('TodoFireController', function($scope, $firebase) {
+.controller('TodoFireController', ['$scope', '$firebase', function($scope, $firebase) {
     $('#navbar').children('.active').removeClass('active');
 	$('#todos').addClass('active');
     
@@ -68,8 +68,8 @@ controller('MyCtrl1', [function() {
         return name.join('');
     }
 
-})
-.controller('TodoController', function($scope, $http) {
+}])
+.controller('TodoController', [function($scope, $http) {
 	$('#navbar').children('.active').removeClass('active');
 	$('#todos').addClass('active');
 
@@ -158,4 +158,4 @@ controller('MyCtrl1', [function() {
         }
         return name.join('');
     }
-});
+}]);
