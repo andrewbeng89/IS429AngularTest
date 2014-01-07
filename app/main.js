@@ -28,7 +28,7 @@ MongoClient.connect(connection_string, function(err, db) {
 */
 app.param('id', function(req, res, next, id){
     todo_collection.findOne({
-        id: parseFloat(id)
+        id: id
     }, function(err, todo) {
         if (err) {
             next(err);

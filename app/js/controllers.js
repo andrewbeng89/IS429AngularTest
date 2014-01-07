@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
+angular.module('myApp.controllers', ['firebase']).
 controller('MyCtrl1', [function() {
 	$('#navbar').children('.active').removeClass('active');
 	$('#view1').addClass('active');
@@ -11,6 +11,69 @@ controller('MyCtrl1', [function() {
 	$('#navbar').children('.active').removeClass('active');
 	$('#view2').addClass('active');
 }])
+.controller('TodoFireController', function($scope, $firebase) {
+    $('#navbar').children('.active').removeClass('active');
+	$('#todos').addClass('active');
+    
+    // Array representing the list of todos
+    $scope.todos = [];
+    // Load status
+    $scope.loaded = false;
+        
+    var ref = new Firebase('https://mitb-demo.firebaseio.com/todos');
+    $scope.todos = $firebase(ref);
+    $scope.todos.$bind($scope, "todos");
+    console.log($scope.todos["-JCcHIT8w5TYIos6i6II"]);
+    
+    $scope.addTodo = function(title) {
+        // Reset the title to an empty string
+        $scope.newTodoTitle = '';
+        // Each todo is an object with a title, completed status and a generated ID
+        // Push the newly created todo into the list
+        $scope.todos.$add({
+            title: title,
+            completed: false,
+            id: generateID()
+        });
+    };
+        
+    $scope.changeCompleted = function(todo) {
+        // Update the todo
+        var message = (todo.completed === true) ? 'Task Completed!' : 'Task Uncompleted!';
+    };
+    
+    $scope.removeCompletedItems = function() {
+        // Array to contain all uncompleted todos
+        var uncompleted_todos = [];
+        // If a todo is completed, delete it
+        $scope.todos.forEach(function(todo) {
+            if (todo.completed === true) {
+                deleteTodo(todo.id);
+            }
+            else {
+                uncompleted_todos.push(todo);
+            }
+        });
+        // Set todo list to list of uncompleted todos
+        $scope.todos = uncompleted_todos;
+    };
+
+    function deleteTodo(id) {
+        // Delete function only for todo_xhr.js
+    }
+    
+    // Random ID generator
+    function generateID() {
+        var chars, x, length = 10;
+        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-=";
+        var name = [];
+        for (x = 0; x < length; x++) {
+            name.push(chars[Math.floor(Math.random() * chars.length)]);
+        }
+        return name.join('');
+    }
+
+})
 .controller('TodoController', function($scope, $http) {
 	$('#navbar').children('.active').removeClass('active');
 	$('#todos').addClass('active');
@@ -92,12 +155,12 @@ controller('MyCtrl1', [function() {
 
     // Random ID generator
     function generateID() {
-    	var rand = Math.random();
-    	$scope.todos.forEach(function(todo) {
-    		if (todo.id === rand) {
-    			generateID();
-    		}
-    	});
-    	return rand;
+        var chars, x, length = 10;
+        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-=";
+        var name = [];
+        for (x = 0; x < length; x++) {
+            name.push(chars[Math.floor(Math.random() * chars.length)]);
+        }
+        return name.join('');
     }
 });
