@@ -6,8 +6,8 @@ module.exports = function(config){
       'app/lib/angular/angular.js',
       'app/lib/angular/angular-*.js',
       'test/lib/angular/angular-mocks.js',
-      '//cdn.firebase.com/v0/firebase.js',
-      '//cdn.firebase.com/libs/angularfire/0.5.0/angularfire.min.js',
+      'app/lib/firebase.js',
+      'app/lib/angularfire.min.js',
       'app/js/**/*.js',
       'test/unit/**/*.js'
     ],
