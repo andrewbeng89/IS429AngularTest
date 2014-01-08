@@ -64,8 +64,9 @@ You can use Nitrous.IO as a testing environment for development.
 1. `cd app`
 2. In the app/ directory, create a new file `credentials.js`
 3. Add `module.exports = {MONGO_PASSWORD:"is429"};` and save
-4. Run the app `node main.js`
-5. Under "Preview" from the IDE, select "Port 3000" to view the app which should look like this:
+4. Install the dependencies `npm install`
+5. Run the app `node main.js`
+6. Under "Preview" from the IDE, select "Port 3000" to view the app which should look like this:
 
 ![koding terminal](https://github.com/andrewbeng89/IS429AngularTest/raw/master/images/webapp_preview.png)
 
@@ -148,7 +149,7 @@ AngularJS also provides an easy way to implment [single page applications](http:
 
 This repository also provides a classic "todo" application with two backend approaches:
 
-1. A purely front-end AngularJS app that COMMUNICATES with a [Firebase](https://firebase.com) real-time Database-as-a-Service
+1. A pure front-end AngularJS app that syncs with a [Firebase](https://firebase.com) real-time Database-as-a-Service
 2. Integrated AngularJS app that communites with a Node.js back-end hosted on CloudBees
 
 
@@ -168,12 +169,16 @@ To create your own Firebase real-time database:
 6. Create some new todos and reload the page and observe
 7. Open up different windows to the same URL and observe when you perform CRUD on the todos
 
+This version of the "todo" app is enabled by default.
+
 
 ### Node.js with MongoDB (Mongolab Database-as-a-Service)
 
+To enable the node.js with MongoDB version of the "todo" app, change `var firebase_backend` in app/js/app.js to `false`. This will enable the "TodoController" in AngularJS.
+
 [Node.js](http://nodejs.org) is a JavaScript platform built on [Google's V8 engine](https://code.google.com/p/v8/), and is used to develop a wide variety of network applications, including web applications.
 
-This demo application uses the [Express web app framework](http://expressjs.com/) as its backbone, with a "public" folder containing all of the front-end code (AngularJS-based application). The AngularJS code for this integrated version of the app exists in "todo_xhr.js". Unlike "todo.js", the method calls will interact with the Expressjs application via HTTP requests. The application back-end code ("app.js") will handle these request to either create, retrieve, update or delete (CRUD) "todo" items in the application's database.
+This demo application uses the [Express web app framework](http://expressjs.com/) as its backbone, with a app/ folder containing all of the front (js/, css/, partials/ etc.) and back-end (main.js, package.json etc.) code. 
 
 The application database used here is [MongoDB](http://www.mongodb.org/), a document/object based database system. Unlike a traditional relational databse system (e.g. MySQL, Oracle DB), MongoDB is an example of a non-relational [NoSQL](http://en.wikipedia.org/wiki/NoSQL) database. Other examples of NoSQL database systems include CouchDB and Google's App Engine Datastore (NDB is covered in the [sister GAE tutorial](https://github.com/andrewbeng89/mitb_gae_demo)).
 
@@ -181,7 +186,7 @@ To uses MongoDB-as-a-Service hosted on [Mongolab](https://mongolab.com) with the
 
 1. Sign up for Mongolab [here](https://mongolab.com/signup/)
 2. Once logged in, proceed to create a new mondolab development environment [here](https://mongolab.com/create). Remember to select "Development (single-node)" under "plans"
-3. Choose a name for the database, e.g. "<your name>-todos-db"
+3. Choose a name for the database, e.g. "is429-todos"
 4. When prompted, create the credentials for a new database user (username and password)
 5. Make a note of the database name and the username and password of the new user you have just created 
 
@@ -205,7 +210,11 @@ Using CloudBees SDK from the VM terminal:
 1. `bees config:set MONGO_PASSWORD=<MongoDB Password from Mongolab here> -a <your-username>/<your-repo>`
 2. Verify that the MONGO_PASSWORD variable has been set: `bees config:list -a <your-username>/<your-repo>`
 
+Change the MongoDB URL endpoint in this line in app/main.js
 
+`connection_string = 'mongodb://<your-db-username>:' + MONGO_PASSWORD + '@<your-mongolab-host>:39088/<your-database>';`
+
+<--
 ### Application Tracking with Google Analytics
 
 Google Analytics can be used as a tool to track your application's users' behaviour. These include page views, application events, content flow and user locations, just to name a few.
@@ -221,7 +230,6 @@ The following steps will demonstrate configuring Google Analytics to track the n
 7. Edit this line: `_gaq.push(['_setAccount', '<Tracking ID here>']);`
 8. Open the "/public/js/todo_xhr.js" file
 9. The lines with code similar to ` _gaq.push(['_trackEvent', 'create', 'click', 'todo']);` indicate event tracking with Google Analytics
+-->
 
-
-## View the demo app on [Heroku](http://mitb-node-demo.herokuapp.com)
-## View the demo app on [Elastic Beanstalk](http://mitb-node-demo-8tqj3ypyra.elasticbeanstalk.com)
+## View the demo app on [CloudBees](http://angular-awesome.andrewbeng89.cloudbees.net)
