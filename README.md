@@ -214,22 +214,5 @@ Change the MongoDB URL endpoint in this line in app/main.js
 
 `connection_string = 'mongodb://<your-db-username>:' + MONGO_PASSWORD + '@<your-mongolab-host>:39088/<your-database>';`
 
-<--
-### Application Tracking with Google Analytics
-
-Google Analytics can be used as a tool to track your application's users' behaviour. These include page views, application events, content flow and user locations, just to name a few.
-
-The following steps will demonstrate configuring Google Analytics to track the number of page views and the number of CRUD events triggered by users:
-
-1. Create a Google Analytics account [here](http://www.google.com/analytics/)
-2. From the main home console, navigate to the "Admin" page
-3. Create a new "Property"
-4. Enter the details of this application (the URL can either be the Heroku or Elastic Beanstalk URL)
-5. Once created, note the "Tracking ID" for this application
-6. Open the "/public/js/gooogle-analytics.js" file
-7. Edit this line: `_gaq.push(['_setAccount', '<Tracking ID here>']);`
-8. Open the "/public/js/todo_xhr.js" file
-9. The lines with code similar to ` _gaq.push(['_trackEvent', 'create', 'click', 'todo']);` indicate event tracking with Google Analytics
--->
 
 ## View the demo app on [CloudBees](http://angular-awesome.andrewbeng89.cloudbees.net)
