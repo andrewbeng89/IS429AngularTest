@@ -48,7 +48,7 @@ Generate a new ssh key pair on the VM to use to sync with GitHub and Jenkins.
 ### Clone and Configure Demo App
 
 1. Set your git user email identity `git config --global user.email "<your_email@example.com>"`
-2. Set your git user email identity `git config --global user.name "<Your Name>"`
+2. Set your git user name identity `git config --global user.name "<Your Name>"`
 3. Clone this repository `git clone https://github.com/andrewbeng89/IS429AngularTest.git`
 4. `cd IS429AngularTest`
 5. Reomve the .git directory `rm -rf .git`
@@ -62,7 +62,7 @@ Generate a new ssh key pair on the VM to use to sync with GitHub and Jenkins.
 You can use Nitrous.IO as a testing environment for development.
 
 1. `cd app`
-2. In the app directory, create a new file `credentials.js`
+2. In the app/ directory, create a new file `credentials.js`
 3. Add `module.exports = {MONGO_PASSWORD:"is429"};` and save
 4. Run the app `node main.js`
 5. Under "Preview" from the IDE, select "Port 3000" to view the app which should look like this:
@@ -77,7 +77,7 @@ After signing up for [CloudBees](http://www.cloudbees.com/), install the CloudBe
 2. `unzip bees_sdk.zip`
 3. `rm bees_sdk.zip`
 4. `cd cloudbees-sdk-1.5.2`
-5. `vim ~/.bashrc` and enter `i`
+5. `vim ~/.bashrc` and type `i` to activate insertion mode
 6. Insert the following lines at the end on the file. `Esc + :wq` to save and close
 <pre>
   <code>
@@ -138,7 +138,7 @@ To test the CI testing and deployment:
 
 ## Part 2: AngularJS Development in the Cloud
 
-This section will cover simple front and back end techniques to get you up to speed with application development in the Cloud
+This section will cover simple front and back end techniques to get you up to speed with AngularJS application development in the Cloud
 
 ### AngularJS
 
@@ -146,7 +146,7 @@ This section will cover simple front and back end techniques to get you up to sp
 
 AngularJS also provides an easy way to implment [single page applications](http://en.wikipedia.org/wiki/Single-page_application) with front end templating and routing. In this example application, routing to the various templates are in app/js/app.js while the HTML fragments are stored in the app/partials directory. Each template can then be associated to a unique AngularJS controller (app/js/controllers.js).
 
-This repository also a classic "todo" application with two backend approaches:
+This repository also provides a classic "todo" application with two backend approaches:
 
 1. A purely front-end AngularJS app that COMMUNICATES with a [Firebase](https://firebase.com) real-time Database-as-a-Service
 2. Integrated AngularJS app that communites with a Node.js back-end hosted on CloudBees
@@ -167,6 +167,7 @@ To create your own Firebase real-time database:
 5. View the app on your CloudBees app URL one the build is completed
 6. Create some new todos and reload the page and observe
 7. Open up different windows to the same URL and observe when you perform CRUD on the todos
+
 
 ### Node.js with MongoDB (Mongolab Database-as-a-Service)
 
