@@ -1,78 +1,52 @@
-
-
-<!DOCTYPE html>
-<html lang="en" ng-app="myApp">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Starter Template for Bootstrap</title>
-
-    <!-- Bootstrap core CSS -->
+<!doctype html>
+<!-- You need to add ng-app to the html tag to get angluar to handle the page. -->
+<html ng-app="myApp">
+  <header>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="https://angular-awesome.andrewbeng89.cloudbees.net/css/app.css"/>
-
-    <!-- Just for debugging purposes. Don't actually copy this line! -->
-    <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container" ng-cloak>
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul id="navbar" class="nav navbar-nav">
-            <li id="view1" class="active"><a href="#/view1">View 1</a></li>
-            <li id="view2"><a href="#/view2">View 2</a></li>
-            <li id="todos"><a href="#/todos">Todos</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
-
-    <div class="container">
-
-      <div class="starter-template">
-        <h1>Bootstrap starter template</h1>
-      </div>
-      <div ng-view></div>
-      <div>Angular seed app: v<span app-version></span></div>
-    </div><!-- /.container -->
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-    <script src="https://angular-awesome.andrewbeng89.cloudbees.net/lib/angular/angular.js"></script>
-    <script src="https://angular-awesome.andrewbeng89.cloudbees.net/lib/angular/angular-route.js"></script>
-    <script src="https://angular-awesome.andrewbeng89.cloudbees.net/lib/firebase.js"></script>
-    <script src="https://angular-awesome.andrewbeng89.cloudbees.net/lib/angularfire.min.js"></script>
-    <script src="https://angular-awesome.andrewbeng89.cloudbees.net/js/app.js"></script>
-    <script src="https://angular-awesome.andrewbeng89.cloudbees.net/js/services.js"></script>
-    <script src="https://angular-awesome.andrewbeng89.cloudbees.net/js/controllers.js"></script>
-    <script src="https://angular-awesome.andrewbeng89.cloudbees.net/js/filters.js"></script>
-    <script src="https://angular-awesome.andrewbeng89.cloudbees.net/js/directives.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.js"></script>
+    <script src="http://underscorejs.org/underscore-min.js"></script>
+    <script language="javascript" type="text/javascript">
+      //You need to add myApp to a module and provide access to any needed services.
+      angular.module('myApp', []);
+      
+      function ToDoCtrl($scope) {
+        $scope.todos = [];
+        
+        $scope.addTodo = function() {
+          var newTodo = {
+            text:$scope.newTodo,
+            done:false
+          }
+          $scope.todos.push(newTodo);
+          $scope.newTodo = "";
+          
+        }
+        
+        $scope.removeTodo = function() {
+  	      $scope.todos = _.filter($scope.todos, function(todo) {
+			      return !todo.done;
+		      });
+	      }
+        
+    }
+      
+    </script>
+  </header>
+  
+  <body ng-controller="ToDoCtrl">
+    <input type="text" ng-model="newTodo">
+    <input type="submit" ng-click="addTodo()" value="Add Todo">
+    </input>
+    <ul>
+      <li ng-repeat="todo in todos">
+      {{todo.text}}
+      <input type="checkbox" ng-model="todo.done">
+      </li>
+    </ul>
+    <input type="submit" ng-click="removeTodo()" value="Clear Todos">
+    <p>View on GitHub <a href="https://github.com/andrewbeng89/ab_smu_cloud/tree/master/andrew-beng-2010">here</a><p>
+    <p>Thanks to <a href="http://www.youtube.com/watch?feature=player_embedded&v=uFTFsKmkQnQ">this</a> youtube tutorial for the basic todo app</p>
+    <iframe width="560" height="315" src="http://www.youtube.com/embed/WuiHuZq_cg4" frameborder="0" allowfullscreen></iframe>
   </body>
+
 </html>
