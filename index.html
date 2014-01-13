@@ -1,52 +1,159 @@
-<!doctype html>
-<!-- You need to add ng-app to the html tag to get angluar to handle the page. -->
-<html ng-app="myApp">
-  <header>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.js"></script>
-    <script src="http://underscorejs.org/underscore-min.js"></script>
-    <script language="javascript" type="text/javascript">
-      //You need to add myApp to a module and provide access to any needed services.
-      angular.module('myApp', []);
-      
-      function ToDoCtrl($scope) {
-        $scope.todos = [];
-        
-        $scope.addTodo = function() {
-          var newTodo = {
-            text:$scope.newTodo,
-            done:false
-          }
-          $scope.todos.push(newTodo);
-          $scope.newTodo = "";
-          
-        }
-        
-        $scope.removeTodo = function() {
-  	      $scope.todos = _.filter($scope.todos, function(todo) {
-			      return !todo.done;
-		      });
-	      }
-        
-    }
-      
-    </script>
-  </header>
-  
-  <body ng-controller="ToDoCtrl">
-    <input type="text" ng-model="newTodo">
-    <input type="submit" ng-click="addTodo()" value="Add Todo">
-    </input>
-    <ul>
-      <li ng-repeat="todo in todos">
-      {{todo.text}}
-      <input type="checkbox" ng-model="todo.done">
-      </li>
-    </ul>
-    <input type="submit" ng-click="removeTodo()" value="Clear Todos">
-    <p>View on GitHub <a href="https://github.com/andrewbeng89/ab_smu_cloud/tree/master/andrew-beng-2010">here</a><p>
-    <p>Thanks to <a href="http://www.youtube.com/watch?feature=player_embedded&v=uFTFsKmkQnQ">this</a> youtube tutorial for the basic todo app</p>
-    <iframe width="560" height="315" src="http://www.youtube.com/embed/WuiHuZq_cg4" frameborder="0" allowfullscreen></iframe>
-  </body>
+<!DOCTYPE html>
+<html lang="en" ng-app="todoApp">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
+    <title>Starter Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Custom styles for this template -->
+    <style>
+      /* app css stylesheet */
+      body {
+        padding-top: 50px;
+      }
+      .starter-template {
+        padding: 40px 15px;
+        text-align: center;
+      }
+    </style>
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container" ng-cloak>
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul id="navbar" class="nav navbar-nav">
+            <li id="todos" class="active"><a href="#/todos">Todos</a></li>
+            <li id="view1"><a href="#/view1">View 1</a></li>
+            <li id="view2"><a href="#/view2">View 2</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>Bootstrap starter template</h1>
+      </div>
+      <div ng-controller="TodoController">
+        <h1>The Classic Todo List</h1>
+        <p id="empty" ng-hide="(todos.$getIndex() || todos.length) || !loaded">You don't have any todos! Add one now:</p>
+        <ul id="todos" class="unstyled">
+            <li ng-repeat="todo in todos">
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="todo.completed" ng-change="changeCompleted(todo)" />
+                    {{todo.title}}
+                </label>
+            </li>
+        </ul>
+        <form class="form-inline">
+            <input id="todo-title" type="text" ng-model="newTodoTitle" />
+            <button id="add-btn" class="btn btn-success" ng-click="addTodo(newTodoTitle)">Add</button>
+        </form>
+        <p>
+          <a href id="remove-completed-btn" ng-click="removeCompletedItems()">Remove completed items</a>
+        </p>
+      </div>
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-route.js"></script>
+    <script src="//cdn.firebase.com/v0/firebase.js"></script>
+    <script src="//cdn.firebase.com/libs/angularfire/0.5.0/angularfire.min.js"></script>
+    <script>
+      var todoApp = angular.module('todoApp', ['firebase']);
+
+      todoApp.controller('TodoController', function($scope, $firebase) {
+      
+          $scope.loaded = false;
+              
+          var ref = new Firebase('https://is429-demo.firebaseio.com/todos');
+          $scope.todos = $firebase(ref);
+          $scope.todos.$bind($scope, "todos");
+          
+          $scope.addTodo = function(title) {
+              if (title !== '') {
+                // Reset the title to an empty string
+                $scope.newTodoTitle = '';
+                // Each todo is an object with a title, completed status and a generated ID
+                // Set the newly created todo as a child in the todo collection
+                var id = generateID();
+                $scope.todos.$child(id).$set({
+                    title: title,
+                    completed: false,
+                    id: id
+                });
+              } else {
+                alert("Please type something!");
+              }
+          };
+              
+          $scope.changeCompleted = function(todo) {
+              // Update the todo
+              $scope.todos.$child(todo.id).$set(todo);
+              var message = (todo.completed === true) ? 'Task Completed!' : 'Task Uncompleted!';
+          };
+          
+          $scope.removeCompletedItems = function() {
+              // If a todo is completed, delete it
+              $scope.todos.$getIndex().forEach(function(index) {
+                  if ($scope.todos[index].completed === true) {
+                      $scope.todos.$remove(index);
+                  }
+              });
+          };
+          
+          // Random ID generator
+          function generateID() {
+              var chars, x, length = 10;
+              chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-=";
+              var name = [];
+              for (x = 0; x < length; x++) {
+                  name.push(chars[Math.floor(Math.random() * chars.length)]);
+              }
+              var id = name.join('');
+              if ($scope.todos.$getIndex().indexOf(id) === -1) {
+                return id;
+              } else {
+                generateId();
+              }
+          }
+      
+      
+      });
+    </script>
+  </body>
 </html>
